@@ -7,6 +7,7 @@
 #define HANDOVER_COMMAND_LINE_SIZE 256
 #define HANDOVER_MEMORY_MAP_SIZE 64
 #define HANDOVER_MODULES_SIZE 16
+#define HANDOVER_CPU_COUNT 4
 
 enum MemoryMapEntryType
 {
@@ -30,6 +31,15 @@ struct Module
     char command_line[HANDOVER_COMMAND_LINE_SIZE];
 };
 
+struct SMPInfo
+{
+    uint32_t acpi_processor_uid;
+    uint32_t lapic_id;
+    size_t target_stack;
+    size_t goto_address;
+    size_t extra_argument;
+};
+
 struct Handover
 {
     char bootloader[HANDOVER_BOOTLOADER_NAME_SIZE];
@@ -49,6 +59,9 @@ struct Handover
     size_t framebuffer_pitch;
 
     uintptr_t acpi_rsdp_address;
+
+    size_t cpu_count;
+    SMPInfo smp[HANDOVER_CPU_COUNT];
 };
 
 Handover *handover();

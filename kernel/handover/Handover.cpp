@@ -58,6 +58,14 @@ void handover_dump()
                     module->command_line);
     }
     logger_info("\t-> %d module found", _handover.modules_size);
+
+    logger_info("CPU: ");
+    for (size_t i = 0; i < _handover.cpu_count; i++)
+    {
+        SMPInfo *smp = &_handover.smp[i];
+        logger_info("\t%d: %d", i, smp->acpi_processor_uid);
+    }
+    logger_info("\t-> %d cpu found", _handover.cpu_count);
 }
 
 Handover *handover_initialize(void *header, uint32_t magic)
