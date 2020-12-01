@@ -41,7 +41,7 @@
 // Primary LAPIC IPIs is the ICR(Interrupt Command Register)
 // Delivery Mode
 
-#define ICR_FIXED 0x00000000 // Fixed mode, delivers intr specified in vector field
+#define ICR_FIXED 0x00000000 // Fixed mode, delivers` intr specified in vector field
 #define ICR_LP 0x00000100    // Deliver the lowest priority intr
 #define ICR_SMI 0x00000200   // Deliver an SMI intr
 #define ICR_NMI 0x00000300   // Deliver an NMI intr
@@ -102,5 +102,40 @@ void lapic_initialize()
 {
     pic_disable();
 
-    lapic_write(0xF0, lapic_read(0xF0) | 0x100);
+    // clearing task priority to enable all interrupts
+    lapic_write(TPR, 0);
+
+    // Logical Destination Mode
+    lapic_write(DFR, 0xffffffff); //flat
+    lapic_write(LDR, 0x01000000); // logical id is 1
+
+    lapic_write(SVR, 0x100 | 0xff); // initialize spurious interrupt vector register
+}
+
+// returns the id from LAPIC_ID Reg
+uint32_t lapic_GetID()
+{
+    return lapic_read(ID) >> 24;
+}
+
+// procedure for sending INIT IPI
+void lapic_send_init(uint32_t apic_id)
+{
+    lapic_write(ICRHI, apic_id << ICR_DESTINATION);
+    lapic_write(ICRLO, ICR_INIT | ICR_PHY | ICR_ASSERT | ICR_EDGE | ICR_NO_SHORTHAND);
+
+    // wait until the interrupt is sent (essentially waiting till pending)
+    while (lapic_read(ICRLO) & ICR_SEND_PENDING)
+        ;
+}
+
+// procedure for sending STARTUP
+void lapic_send_startup(uint32_t apic_id, uint32_t vector)
+{
+    lapic_write(LAPIC_ICRHI, apic_id << ICR_DESTINATION);
+    lapic_write(ICRLO, vector | ICR_START | ICR_PHY | ICR_ASSERT | ICR_EDGE | ICR_NO_SHORTHAND);
+
+    // wait until the interrupt is sent (essentially waiting till pending)
+    while (lapic_read(ICRLO) & ICR_SEND_PENDING)
+        ;
 }
