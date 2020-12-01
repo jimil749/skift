@@ -67,7 +67,7 @@ extern "C" void arch_main(void *info, uint32_t magic)
     pit_initialize(1000);
 
     acpi_initialize(handover);
-    //lapic_initialize();
+ //   lapic_initialize();
     smbios::EntryPoint *smbios_entrypoint = smbios::find({0xF0000, 65536});
 
     if (smbios_entrypoint)

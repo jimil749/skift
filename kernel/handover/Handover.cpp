@@ -59,11 +59,17 @@ void handover_dump()
     }
     logger_info("\t-> %d module found", _handover.modules_size);
 
-    logger_info("CPU: ");
+    logger_info("SMP tag: ");
+    logger_info("\tFlags:  %x", _handover.flag);
+    logger_info("\tBSP LAPIC ID:  %d", _handover.bsp_lapic_id);
     for (size_t i = 0; i < _handover.cpu_count; i++)
     {
         SMPInfo *smp = &_handover.smp[i];
-        logger_info("\t%d: %d", i, smp->acpi_processor_uid);
+        logger_info("\tProcessor %d ID: %d", i, smp->acpi_processor_uid);
+        logger_info("\tLAPIC ID:        %d", smp->lapic_id);
+        logger_info("\tTarget Stack:    %d", smp->target_stack);
+        logger_info("\tGOTO Address:    %d", smp->goto_address);
+        logger_info("\tExtra Argument:  %d", smp->extra_argument);
     }
     logger_info("\t-> %d cpu found", _handover.cpu_count);
 }

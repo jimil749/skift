@@ -106,7 +106,6 @@ void stivale2_parse_header(Handover *handover, void *header_ptr)
         }
         case STIVALE2_STRUCT_TAG_RSDP_ID:
         {
-            logger_info("RSDP TAG FOUND");
             auto acpi = reinterpret_cast<stivale2_struct_tag_rsdp *>(tag);
             handover->acpi_rsdp_address = (uintptr_t)(acpi->rsdp);
             break;
@@ -114,9 +113,9 @@ void stivale2_parse_header(Handover *handover, void *header_ptr)
 
         case STIVALE2_STRUCT_TAG_SMP_ID:
         {
-            logger_info("SMP TAG FOUND");
             auto smp = reinterpret_cast<stivale2_struct_tag_smp *>(tag);
-
+            handover->bsp_lapic_id = smp->bsp_lapic_id;
+            handover->flag = smp->flags;
             for (size_t i = 0; i < smp->cpu_count; i++)
             {
                 auto cpu = &smp->smp_info[i];

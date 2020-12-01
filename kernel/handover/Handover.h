@@ -61,6 +61,8 @@ struct Handover
     uintptr_t acpi_rsdp_address;
 
     size_t cpu_count;
+    size_t bsp_lapic_id;
+    size_t flag;
     SMPInfo smp[HANDOVER_CPU_COUNT];
 };
 

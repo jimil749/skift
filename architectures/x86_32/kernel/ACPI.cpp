@@ -10,6 +10,7 @@ void acpi_madt_initialize(MADT *madt)
 {
     logger_info("MADT found, size is %d", madt->record_count());
 
+    // get the lapic address. (madt->local_apic stores the lapic address)
     lapic_found(madt->local_apic);
 
     madt->foreach_record([](auto record) {
