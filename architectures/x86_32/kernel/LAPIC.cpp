@@ -113,7 +113,7 @@ void lapic_initialize()
 }
 
 // returns the id from LAPIC_ID Reg
-uint32_t lapic_GetID()
+uint32_t lapic_getid()
 {
     return lapic_read(ID) >> 24;
 }

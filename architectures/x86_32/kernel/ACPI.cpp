@@ -6,6 +6,9 @@
 
 #include "kernel/firmware/ACPI.h"
 
+uint32_t acpi_cpu_count;
+uint8_t acpi_cpu_id[MAX_CPU_COUNT];
+
 void acpi_madt_initialize(MADT *madt)
 {
     logger_info("MADT found, size is %d", madt->record_count());
@@ -20,6 +23,11 @@ void acpi_madt_initialize(MADT *madt)
         {
             auto local_apic = reinterpret_cast<MADTLocalApicRecord *>(record);
             logger_info("Local APIC (cpu_id=%d, apic_id=%d, flags=%08x)", local_apic->processor_id, local_apic->apic_id, local_apic->flags);
+            if (acpi_cpu_count < MAX_CPU_COUNT)
+            {
+                acpi_cpu_id[acpi_cpu_count] = local_apic->apic_id;
+                ++acpi_cpu_count;
+            }
         }
         break;
 

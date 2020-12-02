@@ -10,6 +10,7 @@
 #include "architectures/x86_32/kernel/FPU.h"
 #include "architectures/x86_32/kernel/GDT.h"
 #include "architectures/x86_32/kernel/IDT.h"
+#include "architectures/x86_32/kernel/IOAPIC.h"
 #include "architectures/x86_32/kernel/Interrupts.h"
 #include "architectures/x86_32/kernel/LAPIC.h"
 #include "architectures/x86_32/kernel/x86_32.h"
@@ -67,7 +68,8 @@ extern "C" void arch_main(void *info, uint32_t magic)
     pit_initialize(1000);
 
     acpi_initialize(handover);
- //   lapic_initialize();
+    lapic_initialize();
+    ioapic_initialize();
     smbios::EntryPoint *smbios_entrypoint = smbios::find({0xF0000, 65536});
 
     if (smbios_entrypoint)
