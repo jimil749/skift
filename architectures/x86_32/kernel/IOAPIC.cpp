@@ -25,7 +25,7 @@ void ioapic_found(uintptr_t address)
 uint32_t ioapic_read(uint32_t reg)
 {
     *((volatile uint32_t *)(ioapic + IO_REGSEL)) = reg;
-    return *((volatile uint32_t)(ioapic + IO_WIN));
+    return *((volatile uint32_t *)(ioapic + IO_WIN));
 
     // ioapic[0] = (reg & 0xff);
     // return ioapic[4];
@@ -44,8 +44,8 @@ void ioapic_write(uint32_t reg, uint32_t value)
 // The redirection entry register for IRQ n is 0x10 + n*2(+1) (Each IRQ has 2 32 bit regs)
 void ioapic_set_entry(uint8_t index, uint64_t data)
 {
-    ioapic_write(ioapic, IO_REDTBL + index * 2, (uint32_t)data);
-    ioapic_write(ioapic, IO_REDTBL + index * 2 + 1, (uint32_t)(data >> 32));
+    ioapic_write(IO_REDTBL + index * 2, (uint32_t)data);
+    ioapic_write(IO_REDTBL + index * 2 + 1, (uint32_t)(data >> 32));
 }
 
 void ioapic_initialize()

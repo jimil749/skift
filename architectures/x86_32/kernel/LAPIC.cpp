@@ -125,17 +125,17 @@ void lapic_send_init(uint32_t apic_id)
     lapic_write(ICRLO, ICR_INIT | ICR_PHY | ICR_ASSERT | ICR_EDGE | ICR_NO_SHORTHAND);
 
     // wait until the interrupt is sent (essentially waiting till pending)
-    while (lapic_read(ICRLO) & ICR_SEND_PENDING)
+    while (lapic_read(ICRLO) & ICR_PENDING)
         ;
 }
 
 // procedure for sending STARTUP
 void lapic_send_startup(uint32_t apic_id, uint32_t vector)
 {
-    lapic_write(LAPIC_ICRHI, apic_id << ICR_DESTINATION);
+    lapic_write(ICRHI, apic_id << ICR_DESTINATION);
     lapic_write(ICRLO, vector | ICR_START | ICR_PHY | ICR_ASSERT | ICR_EDGE | ICR_NO_SHORTHAND);
 
     // wait until the interrupt is sent (essentially waiting till pending)
-    while (lapic_read(ICRLO) & ICR_SEND_PENDING)
+    while (lapic_read(ICRLO) & ICR_PENDING)
         ;
 }

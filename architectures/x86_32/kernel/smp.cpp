@@ -15,14 +15,14 @@ void SmpInit()
     for (uint i = 0; i < acpi_cpu_count; ++i)
     {
         uint apic_id = acpi_cpu_id[i];
-        if (acpid_id != l_id)
+        if (apic_id != l_id)
         {
             lapic_send_init(apic_id);
         }
     }
 
     // wait for 10 ms (yet to implement programmable Interrupt Timer)
-    pit_wait(10);
+    // pit_wait(10);
 
     // now sending STARTUP IPI to all cpus except the BSP
     for (uint i = 0; i < acpi_cpu_count; ++i)
@@ -35,6 +35,6 @@ void SmpInit()
     }
 
     // waiting untill cpu becomes active.... (not sure about this)
-    pit_wait(1);
-    while ()
+    // pit_wait(1);
+    // while ()
 }
